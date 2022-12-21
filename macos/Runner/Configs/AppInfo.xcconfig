@@ -8,7 +8,7 @@
 PRODUCT_NAME = wanted_umbrella
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.wantedumbrella.wantedUmbrella
+PRODUCT_BUNDLE_IDENTIFIER = com.example.wantedUmbrella
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2022 com.wanted_umbrella. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2022 com.example. All rights reserved.
