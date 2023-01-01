@@ -1,10 +1,15 @@
 import 'dart:io';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wanted_umbrella/main.dart';
+import 'package:wanted_umbrella/pages/on_boarding/on_boarding_provider.dart';
 import 'package:wanted_umbrella/routes.dart';
 import 'package:wanted_umbrella/utils/constants.dart';
+import 'package:wanted_umbrella/utils/prefs.dart';
 import 'package:wanted_umbrella/utils/utils.dart';
 
 // FirebaseUser _user;
@@ -23,57 +28,18 @@ class LoginPageState extends State<LoginPage> {
   bool wrongEmail = false;
   bool wrongPassword = false;
 
-  // final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-//   Future<FirebaseUser> _handleSignIn() async {
-//     // hold the instance of the authenticated user
-// //    FirebaseUser user;
-//     // flag to check whether we're signed in already
-//     bool isSignedIn = await _googleSignIn.isSignedIn();
-//     if (isSignedIn) {
-//       // if so, return the current user
-//       _user = await _auth.currentUser();
-//     } else {
-//       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-//       final GoogleSignInAuthentication googleAuth =
-//       await googleUser.authentication;
-//       // get the credentials to (access / id token)
-//       // to sign in via Firebase Authentication
-//       final AuthCredential credential = GoogleAuthProvider.getCredential(
-//           accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-//       _user = (await _auth.signInWithCredential(credential)).user;
-//     }
-//
-//     return _user;
-//   }
-
-  // void onGoogleSignIn(BuildContext context) async {
-  //   setState(() {
-  //     _showSpinner = true;
-  //   });
-  //
-  //   FirebaseUser user = await _handleSignIn();
-  //
-  //   setState(() {
-  //     _showSpinner = true;
-  //   });
-  //
-  //   Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //           builder: (context) => GoogleDone(user, _googleSignIn)));
-  // }
 
   String emailText = 'Email doesn\'t match';
   String passwordText = 'password should be at least 6 letters';
   var presscount = 0;
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: onWillPop,
+      onWillPop: onWillPop,
       child: Scaffold(
-
         resizeToAvoidBottomInset: false,
         backgroundColor: GetColors.white,
         body: Container(
@@ -158,30 +124,34 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  onLogin() async{
-    if(Utils.validateEmail(email)){
+  onLogin() async {
+    if (Utils.validateEmail(email)) {
       setState(() => wrongEmail = true);
-    } else if (password.length < 6){
+    } else if (password.length < 6) {
       setState(() {
         wrongEmail = false;
         wrongPassword = true;
       });
     } else {
-
+      Utils.showLoadingDialog(context);
       try {
         setState(() {
           wrongEmail = false;
           wrongPassword = false;
         });
-        final newUser = await _auth.signInWithEmailAndPassword(
-            email: email, password: password);
-        print('check: ${newUser.toString()}');
-
-        if (newUser != null) {
-        Navigator.pushNamed(context, Routes.dashboard);
+        await _auth.signInWithEmailAndPassword(email: email, password: password);
+        await Prefs.setUserEmail(email);
+        OnBoardingProvider provider = Provider.of<OnBoardingProvider>(context,listen: false);
+        await provider.getCurrentUserData(context);
+        Navigator.popUntil(context, ModalRoute.withName(Routes.login));
+        if(provider.currentUserModel?.isKciApproved ?? false){
+          Navigator.pushNamed(context, Routes.dashboard);
+        } else {
+          showKciDialog();
         }
       } on FirebaseAuthException catch (e) {
         print(e.code);
+        Navigator.popUntil(context, ModalRoute.withName(Routes.login));
         if (e.code == 'wrong-password') {
           setState(() {
             wrongPassword = true;
@@ -200,7 +170,20 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<bool> onWillPop () async {
+  showKciDialog (){
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.info,
+      animType: AnimType.scale,
+      dismissOnTouchOutside: false,
+      title: 'KCI not approved',
+      desc: 'Please contact admin - wanted.umbrella27@gmail.com',
+      btnCancel: null,
+      btnOkOnPress: () => Navigator.popUntil(context, ModalRoute.withName(Routes.login)),
+    ).show();
+  }
+
+  Future<bool> onWillPop() async {
     presscount++;
     if (presscount == 2) {
       exit(0);

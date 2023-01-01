@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:swipe_cards/draggable_card.dart';
-import 'package:swipe_cards/swipe_cards.dart';
-import 'package:wanted_umbrella/models/dog_data.dart';
+import 'package:provider/provider.dart';
+import 'package:wanted_umbrella/pages/categories/categories_page.dart';
+import 'package:wanted_umbrella/pages/dashboard_provider.dart';
+import 'package:wanted_umbrella/pages/explore/explore_page.dart';
+import 'package:wanted_umbrella/pages/profile/profile_page.dart';
 import 'package:wanted_umbrella/utils/constants.dart';
-import 'package:wanted_umbrella/utils/utils.dart';
+import 'chat/chat_screen.dart';
 
-import 'selection/selection_swipe_page.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -15,6 +16,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  late DashboardProvider provider;
   List<IconData> listOfIcons = [
     Icons.handshake,
     Icons.message,
@@ -25,28 +27,33 @@ class _DashboardState extends State<Dashboard> {
   late Size size;
 
   @override
+  void initState() {
+    super.initState();
+    provider =Provider.of<DashboardProvider>(context,listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      provider.getExploreData(context);
+    });
+  }
+
+  @override
+  void dispose() {
+    provider.reset();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
-
     return Scaffold(
       extendBody: true,
       resizeToAvoidBottomInset: false,
-      body: Container(
-        decoration: const BoxDecoration(
-          color: Colors.blue,
-          gradient: LinearGradient(
-              colors: [Color(0xFFCC3DE5), Color(0xFF933DC8), Color(0xFF1647BF)],
-              begin: FractionalOffset(0, 0),
-              end: FractionalOffset(0.5, 1.2)),
-        ),
-        child: onPageSelection(),
-      ),
+      body: onPageSelection(),
       bottomNavigationBar: Container(
         height: size.width * .155,
         decoration: BoxDecoration(
           color: GetColors.white,
           boxShadow: [
-            BoxShadow(color: GetColors.black.withOpacity(.15), blurRadius: 30, offset: const Offset(0, 10)),
+            BoxShadow(color: GetColors.black.withOpacity(0.3), blurRadius: 5, offset: const Offset(0, 0)),
           ],
           borderRadius: const BorderRadius.vertical(top: Radius.circular(36)),
         ),
@@ -54,58 +61,60 @@ class _DashboardState extends State<Dashboard> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(
               4,
-              (index) => InkWell(
-                    onTap: () {
-                      setState(() {
-                        currentIndex = index;
-                      });
-                    },
-                    splashColor: GetColors.transparent,
-                    highlightColor: GetColors.transparent,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 1500),
-                          curve: Curves.fastLinearToSlowEaseIn,
-                          margin: EdgeInsets.only(
-                            bottom: index == currentIndex ? 0 : size.width * .029,
-                            right: size.width * .0422,
-                            left: size.width * .0422,
-                          ),
-                          width: size.width * .128,
-                          height: index == currentIndex ? size.width * .014 : 0,
-                          decoration: const BoxDecoration(
-                            color: GetColors.purple,
-                            borderRadius: BorderRadius.vertical(
-                              bottom: Radius.circular(10),
-                            ),
-                          ),
+                  (index) => InkWell(
+                onTap: () {
+                  setState(() {
+                    currentIndex = index;
+                  });
+                },
+                splashColor: GetColors.transparent,
+                highlightColor: GetColors.transparent,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 1500),
+                      curve: Curves.fastLinearToSlowEaseIn,
+                      margin: EdgeInsets.only(
+                        bottom: index == currentIndex ? 0 : size.width * .029,
+                        right: size.width * .0422,
+                        left: size.width * .0422,
+                      ),
+                      width: size.width * .128,
+                      height: index == currentIndex ? size.width * .014 : 0,
+                      decoration: const BoxDecoration(
+                        color: GetColors.purple,
+                        borderRadius: BorderRadius.vertical(
+                          bottom: Radius.circular(10),
                         ),
-                        Icon(
-                          listOfIcons[index],
-                          size: size.width * .076,
-                          color: index == currentIndex ? GetColors.purple : GetColors.grey,
-                        ),
-                        SizedBox(height: size.width * .03),
-                      ],
+                      ),
                     ),
-                  )),
+                    Icon(
+                      listOfIcons[index],
+                      size: size.width * .076,
+                      color: index == currentIndex ? GetColors.purple : GetColors.grey,
+                    ),
+                    SizedBox(height: size.width * .03),
+                  ],
+                ),
+              )),
         ),
       ),
     );
+
+
   }
 
   onPageSelection() {
     switch (currentIndex) {
       case 0:
-        return const SelectionSwipePage();
+        return const ExplorePage();
       case 1:
-        return const Center(child: Text("Messages - Coming Soon", style: TextStyle(color: GetColors.white)));
+        return const ChatScreen();
       case 2:
-        return const Center(child: Text("Categories - Coming Soon", style: TextStyle(color: GetColors.white)));
+        return const CategoriesPage();
       case 3:
-        return const Center(child: Text("Profile - Coming Soon", style: TextStyle(color: GetColors.white)));
+        return const ProfilePage();
     }
   }
 }
