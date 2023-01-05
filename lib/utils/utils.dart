@@ -1,25 +1,28 @@
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class Utils {
+  static String? downloadsPath;
+
   static showSnackBar(BuildContext context, String msg, {bool isSuccess = false}) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(msg),
-      // backgroundColor: isSuccess ? Colors.green : Colors.red,
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
-  static bool validateText(String text) {
-    return text.length < 2;
+  static String? validateText(String? text) {
+    if (text == null || text.isEmpty || text.length < 2) {
+      return 'Enter characters only';
+    }
+    return null;
   }
 
   static validateEmail(String text) {
     final bool emailValid =
-        RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(text);
+        RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+            .hasMatch(text);
     return !emailValid;
   }
 
@@ -38,8 +41,8 @@ class Utils {
   }
 
   static Future pickFile() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['jpg', 'pdf','docx','png']);
+    FilePickerResult? result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: ['jpg', 'pdf', 'docx', 'png']);
     if (result != null) {
       PlatformFile file = result.files.first;
       return file;
@@ -49,7 +52,7 @@ class Utils {
     }
   }
 
-  static showLoadingDialog (BuildContext context){
+  static showLoadingDialog(BuildContext context) {
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -57,7 +60,17 @@ class Utils {
           return Container(
               decoration: const BoxDecoration(color: Color.fromRGBO(0, 0, 0, 0.5)),
               child: const Center(child: CircularProgressIndicator()));
-        }
-    );
+        });
+  }
+
+  static setPath() async {
+    Directory _path = await getApplicationDocumentsDirectory();
+    String _localPath = _path.path + Platform.pathSeparator + 'Download';
+    final savedDir = Directory(_localPath);
+    bool hasExisted = await savedDir.exists();
+    if (!hasExisted) {
+      savedDir.create();
+    }
+    downloadsPath = _localPath;
   }
 }

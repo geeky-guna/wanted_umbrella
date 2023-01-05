@@ -1,11 +1,9 @@
 import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wanted_umbrella/main.dart';
 import 'package:wanted_umbrella/pages/on_boarding/on_boarding_provider.dart';
 import 'package:wanted_umbrella/routes.dart';
 import 'package:wanted_umbrella/utils/constants.dart';
@@ -31,8 +29,8 @@ class LoginPageState extends State<LoginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
 
-  String emailText = 'Email doesn\'t match';
-  String passwordText = 'password should be at least 6 letters';
+  String emailText = 'Enter valid Email ID';
+  String passwordText = 'Minimum 8 characters, at least one uppercase letter, one number, one special character';
   var presscount = 0;
 
   @override
