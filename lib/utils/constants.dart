@@ -18,7 +18,7 @@ class GetStrings {
   static const String appName = 'Wanted Umbrella';
   static const String dogPhotosText =
       "You must upload a photo to create your profile.\nMake sure your dog's face is well lit and visible";
-  static const String chooseTraits = "Choose up to 3 traits you'd like to share about your pet.";
+  static const String chooseTraits = "Choose up to 5 traits you'd like to share about your pet.";
   static const String emptyChatMessage = "Once you have a mutual match with someone you'll be connected automatically. Messages are absolute free.";
 }
 
@@ -37,6 +37,13 @@ class GetImages {
   static const String maps = 'assets/images/maps.jpg';
   static const String notifications = 'assets/images/notifications.jpg';
   static const String train_your_pup = 'assets/images/train_your_pup.jpg';
+
+  //video thumbnails
+  static const String guide_dogs = 'assets/images/guide_dogs.jpg';
+  static const String train_tricks = 'assets/images/train_tricks.jpg';
+  static const String sit_stay = 'assets/images/sit_stay.jpg';
+  static const String potty_train = 'assets/images/potty_train.jpg';
+  static const String potty_mistakes = 'assets/images/potty_mistakes.jpg';
 
   //events
   static const String event1 = 'assets/images/event1.png';
