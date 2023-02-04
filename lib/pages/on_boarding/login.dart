@@ -20,20 +20,24 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-  // String email = 'guna@gmail.com';
-  // String password = 'Guna@123';
-  String email = '';
-  String password = '';
+  String email = 'guna@gmail.com';
+  String password = 'Guna@1234';
+
+  // String email = 'female1@gmail.com';
+  // String password = 'Female@1234';
+
+  // String email = '';
+  // String password = '';
 
   bool wrongEmail = false;
   bool wrongPassword = false;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-
   String emailText = 'Enter valid Email ID';
-  String passwordText = 'Minimum 8 characters, at least one uppercase letter, one number, one special character';
+  String passwordText = 'password should be at least 6 letters';
   var presscount = 0;
+  bool obsecurePass = true;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +47,8 @@ class LoginPageState extends State<LoginPage> {
         resizeToAvoidBottomInset: false,
         backgroundColor: GetColors.white,
         body: Container(
-          padding: const EdgeInsets.only(top: 60, bottom: 20, left: 20, right: 20),
+          padding:
+              const EdgeInsets.only(top: 60, bottom: 20, left: 20, right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -72,16 +77,21 @@ class LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 20.0),
                   TextFormField(
-                    obscureText: true,
+                    obscureText: obsecurePass,
                     keyboardType: TextInputType.visiblePassword,
                     onChanged: (value) {
                       password = value;
                     },
                     decoration: InputDecoration(
-                      hintText: 'Password',
-                      labelText: 'Password',
-                      errorText: wrongPassword ? passwordText : null,
-                    ),
+                        hintText: 'Password',
+                        labelText: 'Password',
+                        errorText: wrongPassword ? passwordText : null,
+                        suffixIcon: IconButton(
+                            onPressed: () =>
+                                setState(() => obsecurePass = !obsecurePass),
+                            icon: Icon(obsecurePass
+                                ? Icons.visibility
+                                : Icons.visibility_off))),
                   ),
                   const SizedBox(height: 10.0),
                   Align(
@@ -92,7 +102,8 @@ class LoginPageState extends State<LoginPage> {
                       },
                       child: const Text(
                         'Forgot Password?',
-                        style: TextStyle(fontSize: 20.0, color: GetColors.purple),
+                        style:
+                            TextStyle(fontSize: 20.0, color: GetColors.purple),
                       ),
                     ),
                   ),
@@ -103,17 +114,21 @@ class LoginPageState extends State<LoginPage> {
                 // color: GetColors.purple,
                 style: TextButton.styleFrom(backgroundColor: GetColors.purple),
                 onPressed: onLogin,
-                child: const Text('Login', style: TextStyle(fontSize: 25, color: GetColors.white)),
+                child: const Text('Login',
+                    style: TextStyle(fontSize: 25, color: GetColors.white)),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Don\'t have an account?', style: TextStyle(fontSize: 20)),
+                  const Text('Don\'t have an account?',
+                      style: TextStyle(fontSize: 20)),
                   GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(context, Routes.register);
                     },
-                    child: const Text(' Sign Up', style: TextStyle(fontSize: 20, color: GetColors.purple)),
+                    child: const Text(' Sign Up',
+                        style:
+                            TextStyle(fontSize: 20, color: GetColors.purple)),
                   ),
                 ],
               ),
@@ -139,12 +154,16 @@ class LoginPageState extends State<LoginPage> {
           wrongEmail = false;
           wrongPassword = false;
         });
-        await _auth.signInWithEmailAndPassword(email: email, password: password);
+        await _auth.signInWithEmailAndPassword(
+            email: email, password: password);
         await Prefs.setUserEmail(email);
-        OnBoardingProvider provider = Provider.of<OnBoardingProvider>(context,listen: false);
+        OnBoardingProvider provider =
+            Provider.of<OnBoardingProvider>(context, listen: false);
         await provider.getCurrentUserData(context);
         Navigator.popUntil(context, ModalRoute.withName(Routes.login));
-        if(provider.currentUserModel?.isKciApproved ?? false){
+        if (provider.currentUserModel == null) {
+          showNoUserDialog();
+        } else if (provider.currentUserModel?.isKciApproved ?? false) {
           Navigator.pushNamed(context, Routes.dashboard);
         } else {
           showKciDialog();
@@ -170,7 +189,7 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
-  showKciDialog (){
+  showKciDialog() {
     AwesomeDialog(
       context: context,
       dialogType: DialogType.info,
@@ -179,7 +198,22 @@ class LoginPageState extends State<LoginPage> {
       title: 'KCI not approved',
       desc: 'Please contact admin - wanted.umbrella27@gmail.com',
       btnCancel: null,
-      btnOkOnPress: () => Navigator.popUntil(context, ModalRoute.withName(Routes.login)),
+      btnOkOnPress: () =>
+          Navigator.popUntil(context, ModalRoute.withName(Routes.login)),
+    ).show();
+  }
+
+  showNoUserDialog() {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.info,
+      animType: AnimType.scale,
+      dismissOnTouchOutside: false,
+      title: 'Account Not Available',
+      desc: 'Please sign up...',
+      btnCancel: null,
+      btnOkOnPress: () =>
+          Navigator.popUntil(context, ModalRoute.withName(Routes.login)),
     ).show();
   }
 

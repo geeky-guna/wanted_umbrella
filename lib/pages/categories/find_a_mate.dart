@@ -2,13 +2,13 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:swipe_cards/draggable_card.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:wanted_umbrella/utils/constants.dart';
 import 'package:wanted_umbrella/utils/utils.dart';
 
 import '../../models/user_model.dart';
 import '../../routes.dart';
+import '../../utils/prefs.dart';
 import '../dashboard_provider.dart';
 
 class FindAMate extends StatefulWidget {
@@ -23,10 +23,13 @@ class _FindAMateState extends State<FindAMate> {
   late DashboardProvider provider;
   int page = 0;
 
+  // String? selectedBreed = 'pug';
+  // String? chooseDogGenderValue = 'Female';
   String? selectedBreed;
   String? chooseDogGenderValue;
   List<SwipeItem> swipeItems = [];
   MatchEngine? matchEngine;
+  UserModel? visibleUserModel;
 
   @override
   void initState() {
@@ -55,7 +58,7 @@ class _FindAMateState extends State<FindAMate> {
       case 2:
         return chooseDog();
       case 3:
-        return request();
+        return requestWidget();
     }
   }
 
@@ -76,7 +79,7 @@ class _FindAMateState extends State<FindAMate> {
   SmireTest() {
     return Center(
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 12),
+        margin: const EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(border: Border.all(width: 1)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -85,7 +88,8 @@ class _FindAMateState extends State<FindAMate> {
           children: [
             const Padding(
               padding: EdgeInsets.all(15),
-              child: Text("Smear Test", style: TextStyle(fontSize: 20, color: GetColors.black)),
+              child: Text("Smear Test",
+                  style: TextStyle(fontSize: 20, color: GetColors.black)),
             ),
             const Divider(thickness: 1, color: GetColors.black, height: 0),
             const SizedBox(height: 20),
@@ -98,20 +102,26 @@ class _FindAMateState extends State<FindAMate> {
               children: [
                 TextButton(
                   onPressed: onNext,
-                  style: TextButton.styleFrom(backgroundColor: GetColors.purple),
-                  child: const Text("Yes", style: TextStyle(color: GetColors.white)),
+                  style:
+                      TextButton.styleFrom(backgroundColor: GetColors.purple),
+                  child: const Text("Yes",
+                      style: TextStyle(color: GetColors.white)),
                 ),
                 TextButton(
-                  onPressed: onNext,
-                  style: TextButton.styleFrom(backgroundColor: GetColors.purple),
-                  child: Text("No", style: TextStyle(color: GetColors.white)),
+                  onPressed: () => Navigator.popUntil(
+                      context, ModalRoute.withName(Routes.dashboard)),
+                  style:
+                      TextButton.styleFrom(backgroundColor: GetColors.purple),
+                  child: const Text("No",
+                      style: TextStyle(color: GetColors.white)),
                 )
               ],
             ),
             TextButton(
               onPressed: onNext,
               style: TextButton.styleFrom(backgroundColor: GetColors.grey),
-              child: Text("Not Required", style: TextStyle(color: GetColors.white)),
+              child: const Text("Not Required",
+                  style: TextStyle(color: GetColors.white)),
             ),
             const SizedBox(height: 10),
           ],
@@ -132,8 +142,8 @@ class _FindAMateState extends State<FindAMate> {
           children: [
             const Padding(
               padding: EdgeInsets.all(15),
-              child:
-                  Text("Projection Test", style: TextStyle(fontSize: 20, color: GetColors.black)),
+              child: Text("Projection Test",
+                  style: TextStyle(fontSize: 20, color: GetColors.black)),
             ),
             const Divider(thickness: 1, color: GetColors.black, height: 0),
             const SizedBox(height: 20),
@@ -146,20 +156,26 @@ class _FindAMateState extends State<FindAMate> {
               children: [
                 TextButton(
                   onPressed: onNext,
-                  style: TextButton.styleFrom(backgroundColor: GetColors.purple),
-                  child: const Text("Yes", style: TextStyle(color: GetColors.white)),
+                  style:
+                      TextButton.styleFrom(backgroundColor: GetColors.purple),
+                  child: const Text("Yes",
+                      style: TextStyle(color: GetColors.white)),
                 ),
                 TextButton(
-                  onPressed: onNext,
-                  style: TextButton.styleFrom(backgroundColor: GetColors.purple),
-                  child: Text("No", style: TextStyle(color: GetColors.white)),
+                  onPressed: () => Navigator.popUntil(
+                      context, ModalRoute.withName(Routes.dashboard)),
+                  style:
+                      TextButton.styleFrom(backgroundColor: GetColors.purple),
+                  child: const Text("No",
+                      style: TextStyle(color: GetColors.white)),
                 )
               ],
             ),
             TextButton(
               onPressed: onNext,
               style: TextButton.styleFrom(backgroundColor: GetColors.grey),
-              child: Text("Not Required", style: TextStyle(color: GetColors.white)),
+              child: const Text("Not Required",
+                  style: const TextStyle(color: GetColors.white)),
             ),
             const SizedBox(height: 10),
           ],
@@ -187,13 +203,15 @@ class _FindAMateState extends State<FindAMate> {
                       onChanged: (value) {
                         selectedBreed = value;
                       },
-                      decoration: const InputDecoration(hintText: 'Breed', isDense: true),
+                      decoration: const InputDecoration(
+                          hintText: 'Breed', isDense: true),
                     ))
               ],
             ),
             Row(
               children: [
-                Expanded(flex: 7, child: Text("Choose the gender preference")),
+                const Expanded(
+                    flex: 7, child: const Text("Choose the gender preference")),
                 Expanded(
                     flex: 3,
                     child: DropdownButton<String>(
@@ -204,8 +222,8 @@ class _FindAMateState extends State<FindAMate> {
                           chooseDogGenderValue = newValue;
                         });
                       },
-                      items:
-                          <String>['Male', 'Female'].map<DropdownMenuItem<String>>((String value) {
+                      items: <String>['Male', 'Female']
+                          .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
@@ -217,7 +235,8 @@ class _FindAMateState extends State<FindAMate> {
             TextButton(
               onPressed: onNext,
               style: TextButton.styleFrom(backgroundColor: GetColors.purple),
-              child: Text("Continue", style: TextStyle(color: GetColors.white)),
+              child: const Text("Continue",
+                  style: const TextStyle(color: GetColors.white)),
             )
           ],
         ),
@@ -225,7 +244,7 @@ class _FindAMateState extends State<FindAMate> {
     );
   }
 
-  request() {
+  requestWidget() {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 30),
@@ -254,7 +273,8 @@ class _FindAMateState extends State<FindAMate> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: Image.network(
-                              swipeItems[index].content.dog_images.first ?? 'empty',
+                              swipeItems[index].content.dog_images.first ??
+                                  'empty',
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -277,60 +297,73 @@ class _FindAMateState extends State<FindAMate> {
                               ),
                               color: Colors.white24),
                           margin: const EdgeInsets.fromLTRB(24, 40, 24, 24),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Flexible(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(4),
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            swipeItems[index].content.dog_name + ' ',
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            softWrap: false,
-                                            style: const TextStyle(
-                                                color: GetColors.white,
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                            swipeItems[index].content.breed,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            softWrap: false,
-                                            style: const TextStyle(
-                                                color: GetColors.white, fontSize: 15),
-                                          )
-                                        ],
+                              Flexible(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        swipeItems[index].content.dog_name +
+                                            ' ',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                        style: const TextStyle(
+                                            color: GetColors.white,
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                    ),
+                                      Text(
+                                        swipeItems[index].content.breed,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                        style: const TextStyle(
+                                            color: GetColors.white,
+                                            fontSize: 15),
+                                      ),
+                                      const Spacer(),
+                                      Icon(
+                                        swipeItems[index].content.gender ==
+                                                'Male'
+                                            ? Icons.male
+                                            : Icons.female,
+                                        color:
+                                            swipeItems[index].content.gender ==
+                                                    'Male'
+                                                ? GetColors.blue
+                                                : GetColors.pink,
+                                        size: 26,
+                                      )
+                                    ],
                                   ),
-                                  Flexible(
-                                    child: Row(
-                                      children: List.generate(
-                                          swipeItems[index].content.personalities?.length ?? 0,
-                                          (i) => Row(
-                                                children: [
-                                                  Chip(
-                                                    padding: EdgeInsets.zero,
-                                                    label: Text(swipeItems[index]
-                                                        .content
-                                                        .personalities![i]),
-                                                  ),
-                                                  const SizedBox(width: 5)
-                                                ],
-                                              )),
-                                    ),
-                                  )
-                                ],
+                                ),
                               ),
+                              Flexible(
+                                child: Row(
+                                  children: List.generate(
+                                      swipeItems[index]
+                                              .content
+                                              .personalities
+                                              ?.length ??
+                                          0,
+                                      (i) => Row(
+                                            children: [
+                                              Chip(
+                                                padding: EdgeInsets.zero,
+                                                label: Text(swipeItems[index]
+                                                    .content
+                                                    .personalities![i]),
+                                              ),
+                                              const SizedBox(width: 5)
+                                            ],
+                                          )),
+                                ),
+                              )
                             ],
                           ),
                         ),
@@ -342,6 +375,7 @@ class _FindAMateState extends State<FindAMate> {
                   Utils.showSnackBar(context, "Stack Finished");
                 },
                 itemChanged: (SwipeItem item, int index) {
+                  visibleUserModel = item.content;
                   // print("item: ${item.content.dog_name}, index: $index");
                 },
                 // upSwipeAllowed: true,
@@ -352,12 +386,14 @@ class _FindAMateState extends State<FindAMate> {
             const SizedBox(height: 20),
             Column(
               children: [
-                Text("Rs. 3000/-"),
+                const Text("Rs. 3000/-"),
                 TextButton(
                   onPressed: onRequest,
                   style: TextButton.styleFrom(
-                      backgroundColor: GetColors.purple, padding: EdgeInsets.all(12)),
-                  child: Text("Request to book", style: TextStyle(color: GetColors.white)),
+                      backgroundColor: GetColors.purple,
+                      padding: const EdgeInsets.all(12)),
+                  child: const Text("Request to book",
+                      style: TextStyle(color: GetColors.white)),
                 ),
               ],
             ),
@@ -367,11 +403,17 @@ class _FindAMateState extends State<FindAMate> {
     );
   }
 
+  onRequest() {
+    provider.sendBreedingRequest(visibleUserModel, context);
+    // Navigator.pushNamed(context, Routes.gift_payment, arguments: visibleUserModel);
+  }
+
   onFilter() async {
     var value = await FirebaseFirestore.instance
         .collection("users")
         .where('breed', isEqualTo: selectedBreed)
         .where('gender', isEqualTo: chooseDogGenderValue)
+        .where('email', isNotEqualTo: Prefs.getUserEmail())
         .get();
     if (value.docs.isNotEmpty) {
       List<UserModel> userModel = [];
@@ -382,6 +424,7 @@ class _FindAMateState extends State<FindAMate> {
         userModel.add(users);
         swipeItems.add(SwipeItem(content: users));
       }
+      visibleUserModel = swipeItems[0].content;
       matchEngine = MatchEngine(swipeItems: swipeItems);
       setState(() => page++);
     } else {
@@ -392,22 +435,9 @@ class _FindAMateState extends State<FindAMate> {
         title: 'Error',
         desc: 'No matching dog found please go back to Find a mate.',
         btnCancel: null,
-        btnOkOnPress: () =>
-            Navigator.popUntil(context, ModalRoute.withName(Routes.find_a_mate)),
+        btnOkOnPress: () => Navigator.popUntil(
+            context, ModalRoute.withName(Routes.find_a_mate)),
       ).show();
     }
-  }
-
-  onRequest() {
-    AwesomeDialog(
-      context: context,
-      dialogType: DialogType.success,
-      animType: AnimType.scale,
-      dismissOnTouchOutside: false,
-      title: 'Success',
-      desc: 'Breeding request sent!',
-      btnCancel: null,
-      btnOkOnPress: () => Navigator.popUntil(context, ModalRoute.withName(Routes.dashboard)),
-    ).show();
   }
 }

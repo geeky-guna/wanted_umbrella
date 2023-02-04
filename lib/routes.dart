@@ -5,6 +5,7 @@ import 'package:wanted_umbrella/pages/categories/articles_shows.dart';
 import 'package:wanted_umbrella/pages/categories/chat_bot.dart';
 import 'package:wanted_umbrella/pages/categories/find_a_mate.dart';
 import 'package:wanted_umbrella/pages/categories/gift.dart';
+import 'package:wanted_umbrella/pages/categories/gift_payment.dart';
 import 'package:wanted_umbrella/pages/categories/maps.dart';
 import 'package:wanted_umbrella/pages/categories/notification_page.dart';
 import 'package:wanted_umbrella/pages/categories/train_pup.dart';
@@ -18,8 +19,10 @@ import 'package:wanted_umbrella/pages/on_boarding/login.dart';
 import 'package:wanted_umbrella/pages/on_boarding/register.dart';
 import 'package:wanted_umbrella/pages/profile/adoption.dart';
 import 'package:wanted_umbrella/pages/profile/dog_profile.dart';
+import 'package:wanted_umbrella/pages/profile/help.dart';
 import 'package:wanted_umbrella/pages/profile/vaccination.dart';
 
+import 'models/userChat.dart';
 import 'pages/on_boarding/dog_detail.dart';
 import 'pages/on_boarding/dog_photos.dart';
 
@@ -45,6 +48,7 @@ class Routes {
   static const String maps = '/maps';
   static const String chat_bot = '/chat_bot';
   static const String gift = '/gift';
+  static const String gift_payment = '/gift_payment';
   static const String gift_cart = '/gift_cart';
   static const String articles_shows = '/articles_shows';
   static const String train_pup = '/train_pup';
@@ -53,6 +57,7 @@ class Routes {
   static const String dog_profile = '/dog_profile';
   static const String vaccination = '/vaccination';
   static const String adoption = '/adoption';
+  static const String help = '/help';
 
 
 
@@ -77,7 +82,10 @@ class Routes {
       case choose_personality:
         return MaterialPageRoute(builder: (_) => const ChoosePersonality(), settings: const RouteSettings(name: choose_personality));
       case messege:
-        return MaterialPageRoute(builder: (_) => const MessageScreen());
+        List<dynamic>? args = settings.arguments as List?;
+        return MaterialPageRoute(
+          builder: (_) => MessageScreen(roomID : args![0], currUser: args[1],userChat: args[2] as UserChat),
+        );
       case find_a_mate:
         return MaterialPageRoute(builder: (_) => const FindAMate(), settings: const RouteSettings(name: find_a_mate));
       case notification:
@@ -90,6 +98,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => const ChatBot(),settings: const RouteSettings(name: chat_bot));
       case gift:
         return MaterialPageRoute(builder: (_) => const Gift(),settings: const RouteSettings(name: gift));
+      case gift_payment:
+        return MaterialPageRoute(builder: (_) => GIftPayment(visibleUserModel: settings.arguments as UserModel),settings: const RouteSettings(name: gift_payment));
       case gift_cart:
         return MaterialPageRoute(builder: (_) => const GiftCart(),settings: const RouteSettings(name: gift_cart));
       case articles_shows:
@@ -102,6 +112,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => Vaccination(),settings: const RouteSettings(name: vaccination));
       case adoption:
         return MaterialPageRoute(builder: (_) => Adoption(),settings: const RouteSettings(name: adoption));
+      case help:
+        return MaterialPageRoute(builder: (_) => HelpPage(),settings: const RouteSettings(name: help));
     }
     return MaterialPageRoute(builder: (_) => Container());
   }

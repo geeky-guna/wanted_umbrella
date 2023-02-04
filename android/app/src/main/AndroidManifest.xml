@@ -38,16 +38,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-
-       <provider
-           android:name="vn.hunghd.flutterdownloader.DownloadedFileProvider"
-           android:authorities="${applicationId}.flutter_downloader.provider"
-           android:exported="false"
-           android:grantUriPermissions="true">
-           <meta-data
-               android:name="android.support.FILE_PROVIDER_PATHS"
-               android:resource="@xml/provider_paths"/>
-       </provider>
+       <meta-data android:name="com.google.android.geo.API_KEY"
+           android:value="AIzaSyAfXk3kkL_wlrMkq4w2sOnubevG22qcYO4"/>
     </application>
 
 

@@ -5,7 +5,9 @@ import 'package:wanted_umbrella/pages/dashboard_provider.dart';
 import 'package:wanted_umbrella/pages/explore/explore_page.dart';
 import 'package:wanted_umbrella/pages/profile/profile_page.dart';
 import 'package:wanted_umbrella/utils/constants.dart';
+import '../providers/chatProvider.dart';
 import 'chat/chat_screen.dart';
+import 'on_boarding/on_boarding_provider.dart';
 
 
 class Dashboard extends StatefulWidget {
@@ -32,6 +34,7 @@ class _DashboardState extends State<Dashboard> {
     provider =Provider.of<DashboardProvider>(context,listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       provider.getExploreData(context);
+      // provider.getChatData(context);
     });
   }
 
@@ -44,6 +47,8 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
+    provider =Provider.of<DashboardProvider>(context);
+
     return Scaffold(
       extendBody: true,
       resizeToAvoidBottomInset: false,
@@ -114,7 +119,7 @@ class _DashboardState extends State<Dashboard> {
       case 2:
         return const CategoriesPage();
       case 3:
-        return const ProfilePage();
+        return ProfilePage();
     }
   }
 }

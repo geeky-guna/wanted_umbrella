@@ -17,7 +17,52 @@ class Gift extends StatefulWidget {
 class _GiftState extends State<Gift> {
   late DashboardProvider provider;
   final List<SelectionModel> items = [
-    SelectionModel(text: 'Find a mate', text2: "Rs. 500/-", image: GetImages.flowers_gift),
+    SelectionModel(
+        text:
+            'Dog Scarf ',
+        text2: "Rs. 799/-",
+        price: 799,
+        image: GetImages.gift_1),
+    SelectionModel(
+        text: 'Basic Foldable Metal',
+        text2: "Rs. 4549/-",
+        price: 4549,
+        image: GetImages.gift_2),
+    SelectionModel(
+        text:
+            'Barkbutler Just A Snitch',
+        text2: "Rs. 299/-",
+        price: 299,
+        image: GetImages.gift_3),
+    SelectionModel(
+        text:
+            'Captain Zack Dog Kit',
+        text2: "Rs. 553/-",
+        price: 553,
+        image: GetImages.gift_4),
+    SelectionModel(
+        text:
+            'Spiked Ball Dog Chew Toy',
+        text2: "Rs. 175/-",
+        price: 175,
+        image: GetImages.gift_5),
+    SelectionModel(
+        text: 'Steel Feeding Bowl',
+        text2: "Rs. 236/-",
+        price: 236,
+        image: GetImages.gift_6),
+    SelectionModel(
+        text:
+            'Cotton Poly Mix Chew',
+        text2: "Rs. 597/-",
+        price: 597,
+        image: GetImages.gift_7),
+    SelectionModel(
+        text:
+            'The Dogs Company Flyer Rubber Dog Toy',
+        text2: "Rs. 295/-",
+        price: 295,
+        image: GetImages.gift_8),
   ];
 
   @override
@@ -73,7 +118,8 @@ class _GiftState extends State<Gift> {
         children: [
           Expanded(
               child: Container(
-                  color: GetColors.grey.withOpacity(0.2), child: Image.asset(items[index].image!))),
+                  color: GetColors.grey.withOpacity(0.2),
+                  child: Image.asset(items[index].image!))),
           const SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -111,7 +157,8 @@ class _GiftState extends State<Gift> {
         title: 'Success',
         desc: 'Item added to cart',
         btnCancel: null,
-        btnOkOnPress: () => Navigator.popUntil(context, ModalRoute.withName(Routes.gift)),
+        btnOkOnPress: () =>
+            Navigator.popUntil(context, ModalRoute.withName(Routes.gift)),
       ).show();
       setState(() {
         provider.cartItems.add(items[index]);
@@ -120,8 +167,6 @@ class _GiftState extends State<Gift> {
     }
   }
 }
-
-
 
 class GiftCart extends StatelessWidget {
   const GiftCart({Key? key}) : super(key: key);
@@ -135,8 +180,10 @@ class GiftCart extends StatelessWidget {
           title: const Text("shopping cart"),
           actions: [
             IconButton(
-                onPressed: () => Navigator.popUntil(context, ModalRoute.withName(Routes.gift)),
-                icon: const Icon(Icons.add_shopping_cart_rounded, color: GetColors.red))
+                onPressed: () => Navigator.popUntil(
+                    context, ModalRoute.withName(Routes.gift)),
+                icon: const Icon(Icons.add_shopping_cart_rounded,
+                    color: GetColors.red))
           ],
         ),
         body: Column(
@@ -147,7 +194,10 @@ class GiftCart extends StatelessWidget {
                   itemCount: bloc.cartItems.length,
                   itemBuilder: (context, index) {
                     return Column(
-                      children: [itemList(bloc.cartItems[index]), const Divider(thickness: 1, color: GetColors.black)],
+                      children: [
+                        itemList(bloc.cartItems[index]),
+                        const Divider(thickness: 1, color: GetColors.black)
+                      ],
                     );
                   }),
             ),
@@ -156,7 +206,8 @@ class GiftCart extends StatelessWidget {
               child: TextButton(
                 style: TextButton.styleFrom(backgroundColor: GetColors.purple),
                 onPressed: bloc.cartItems.isEmpty ? null : () => onBuy(context),
-                child: const Text('Buy', style: TextStyle(fontSize: 20, color: GetColors.white)),
+                child: const Text('Buy',
+                    style: TextStyle(fontSize: 20, color: GetColors.white)),
               ),
             ),
             Padding(
@@ -166,8 +217,9 @@ class GiftCart extends StatelessWidget {
                 children: [
                   const Text('Total', style: TextStyle(fontSize: 18)),
                   const SizedBox(width: 20),
-                  Text(bloc.cartItems.isEmpty ? 'Rs. 0/-' : 'Rs. 500/- ',
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                  Text(bloc.cartItems.isEmpty ? 'Rs. 0/-' : cartTotalPrice(bloc.cartItems),
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.w500)),
                 ],
               ),
             ),
@@ -177,13 +229,18 @@ class GiftCart extends StatelessWidget {
       );
     });
   }
-
+cartTotalPrice(cartItems){
+  var total= cartItems.map((item) => item.price).reduce((value1, value2) => value1+value2);
+  return "Rs. $total";
+}
   itemList(SelectionModel model) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: Column(
         children: [
-          Container(height: 150, child: Image.asset(model.image ?? GetImages.flowers_gift)),
+          Container(
+              height: 150,
+              child: Image.asset(model.image ?? GetImages.flowers_gift)),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -201,9 +258,10 @@ class GiftCart extends StatelessWidget {
       animType: AnimType.scale,
       dismissOnTouchOutside: false,
       title: 'Thank you for shopping',
-      desc: 'Your item priced Rs. 500/- will be delivered in 4 working days.',
+      desc: 'Your item will be delivered in 4 working days.',
       btnCancel: null,
-      btnOkOnPress: () => Navigator.popUntil(context, ModalRoute.withName(Routes.dashboard)),
+      btnOkOnPress: () =>
+          Navigator.popUntil(context, ModalRoute.withName(Routes.dashboard)),
     ).show();
   }
 }

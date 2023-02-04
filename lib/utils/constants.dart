@@ -7,6 +7,7 @@ class GetColors {
   static const Color black87 = Colors.black87;
   static const Color yellow = Colors.yellow;
   static const Color blue = Colors.blue;
+  static const Color pink = Colors.pinkAccent;
   static const Color lightBlue = Colors.lightBlue;
   static const Color green = Colors.green;
   static const Color grey = Colors.grey;
@@ -18,22 +19,39 @@ class GetStrings {
   static const String appName = 'Wanted Umbrella';
   static const String dogPhotosText =
       "You must upload a photo to create your profile.\nMake sure your dog's face is well lit and visible";
-  static const String chooseTraits = "Choose up to 5 traits you'd like to share about your pet.";
-  static const String emptyChatMessage = "Once you have a mutual match with someone you'll be connected automatically. Messages are absolute free.";
+  static const String chooseTraits =
+      "Choose up to 5 traits you'd like to share about your pet.";
+  static const String emptyChatMessage =
+      "Once you have a mutual match with someone you'll be connected automatically. Messages are absolute free.";
 }
 
 class GetImages {
   static const String done = 'assets/images/done.jpg';
   static const String robot_icon = 'assets/images/robot_icon.png';
+  static const String placeholderNetwork =
+      'https://dummyimage.com/300x300/fff/aaa';
+
+  //gift
   static const String flowers_gift = 'assets/images/flowers_gift.jpg';
-  static const String placeholderNetwork = 'https://dummyimage.com/300x300/fff/aaa';
+  static const String gift_1 = 'assets/images/1.jpg';
+  static const String gift_2 = 'assets/images/2.jpg';
+  static const String gift_3 = 'assets/images/3.jpg';
+  static const String gift_4 = 'assets/images/4.jpg';
+  static const String gift_5 = 'assets/images/5.jpg';
+  static const String gift_6 = 'assets/images/6.jpg';
+  static const String gift_7 = 'assets/images/7.jpg';
+  static const String gift_8 = 'assets/images/8.jpg';
+  static const String gift_9 = 'assets/images/9.jpg';
+  static const String gift_10 = 'assets/images/10.jpg';
 
   //categories
   static const String adopt_a_dog = 'assets/images/adopt_a_dog.jpg';
   static const String chatbot = 'assets/images/chatbot.jpg';
-  static const String dog_articles_and_events = 'assets/images/dog_articles_and_events.jpg';
+  static const String dog_articles_and_events =
+      'assets/images/dog_articles_and_events.jpg';
   static const String find_a_mate = 'assets/images/find_a_mate.jpg';
-  static const String gift_your_loved_ones = 'assets/images/gift_your_loved_ones.jpg';
+  static const String gift_your_loved_ones =
+      'assets/images/gift_your_loved_ones.jpg';
   static const String maps = 'assets/images/maps.jpg';
   static const String notifications = 'assets/images/notifications.jpg';
   static const String train_your_pup = 'assets/images/train_your_pup.jpg';
