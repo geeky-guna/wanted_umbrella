@@ -109,7 +109,7 @@ class _ArticlesShowsState extends State<ArticlesShows> {
       animType: AnimType.scale,
       dismissOnTouchOutside: false,
       title: 'Please confirm',
-      desc: 'Are you sure you want to Download? If yes, then you will be redirect to Youtube',
+      desc: 'Are you sure you want to Download? If yes, then you will be redirect to Browser',
       btnCancelOnPress: () =>
           Navigator.popUntil(context, ModalRoute.withName(Routes.articles_shows)),
       btnOkOnPress: () => Utils.openUrl(url),
