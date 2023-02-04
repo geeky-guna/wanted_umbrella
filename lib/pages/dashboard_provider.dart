@@ -250,12 +250,13 @@ class DashboardProvider extends ChangeNotifier {
               context: context,
               dialogType: DialogType.success,
               animType: AnimType.scale,
-              dismissOnTouchOutside: false,
+              dismissOnTouchOutside: true,
               title: 'Success',
               desc:
                   'I hope you had a good booking experience. Wanted umbrella wishes you all luck\n 😀',
               btnCancel: null,
-              btnOkOnPress: () => Navigator.pop(context),
+              btnOkOnPress: () => Navigator.popUntil(
+                  context, ModalRoute.withName(Routes.notification)),
             ).show();
           }
 

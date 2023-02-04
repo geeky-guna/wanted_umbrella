@@ -169,7 +169,7 @@ class _DogProfileState extends State<DogProfile> {
                               tempModel?.size = newValue;
                             });
                           },
-                          items: <String>['Small', 'Medium', 'Large', 'Very Large']
+                          items: <String>['Miniature','Small', 'Medium', 'Large']
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
